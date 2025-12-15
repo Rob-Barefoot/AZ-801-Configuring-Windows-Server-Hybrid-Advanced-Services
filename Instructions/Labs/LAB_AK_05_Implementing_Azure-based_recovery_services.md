@@ -26,26 +26,14 @@ lab:
    |Vault name|**az801l05a-rsvault**|
    |Location|the name of an Azure region where you can create an Azure Recovery Services vault and is close to the location of the lab environment|
 
+1. On the **Redundancy** tab of the **Create Recovery Services vault** page, set the **Backup Storage Redundancy** to **Locally-redundant**.
 1. On the **Review + create** tab of the **Create Recovery Services vault** page, select **Create**.
 
    > **Note:** Wait until the Recovery Services vault is provisioned. This should take about 2 minutes.
 
-   > **Note:** By default, the Storage Replication type of the vault is set to Geo-redundant (GRS), as well as Soft Delete and Security Features are enabled. You will change these settings in the lab to simplify deprovisioning, but you should ensure they are enabled in your production environments.
-
-#### Task 2: Configure the Azure Site Recovery vault
-
-1. On **SEA-SVR2**, in the Microsoft Edge window displaying the Azure portal, on the deployment page, select **Go to resource**. 
-
-   > **Note:** This will automatically display the **az801l05a-rsvault** page.
-
-1. On the **az801l05a-rsvault** page, on the vertical menu on the left side, in the **Settings** section, select **Properties**. 
-1. On the **az801l05a-rsvault | Properties** page, select the **Update** link under the **Backup Configuration** label.
-1. On the **Backup Configuration** page, set **Storage replication type** to **Locally-redundant**, select **Apply** and close the **Backup Configuration** page.
+   > **Note:** By default, the Storage Replication type of the vault is set to Geo-redundant (GRS). For the lab, you changed it to Locally-redundant. For increased redundancy in production environments, leave the storage type as GRS.
 
    > **Note:** Storage replication type cannot be changed after you implement protection.
-
-1. On the **az801l05a-rsvault | Properties** page, scroll down until you see the **Soft Delete and security settings** label, and select the **Update** link under it.
-1. On the **Security and soft delete settings** page, disable **Enable soft delete for cloud workloads**, disable **Enable soft delete and security settings for hybrid workloads**, select **Update**, and then close the **Security and soft delete settings** page.
 
 ## Exercise 2: Implementing Hyper-V VM protection by using Azure Site Recovery vault
 
@@ -114,18 +102,25 @@ lab:
 1. Back on the **IP addresses** tab of the **Create virtual network** page, select **Review + create**.
 1. On the **Review + create** tab of the **Create virtual network** page, select **Create**.
 
-   > **Note:** Azure Site Recovery now uses managed disks by default for replicating virtual machines. A cache storage account will be automatically created by Azure Site Recovery to store replication logs and cache data. This eliminates the need to manually create a storage account for VM disk replication.
+1. On **SEA-SVR2**, in the Microsoft Edge window displaying the Azure portal, use the **Search resources, services, and docs** text box in the toolbar to search for and select **Storage Accounts**, and on the **Storage center** page, select **+ Create**.
+1. On the **Basics** tab of the **Create a storage account** page, specify the following settings (leave others with their default values) and select **Review + create**:
+
+   |Setting|Value|
+   |---|---|
+   |Subscription|the name of the Azure subscription you are using in this lab|
+   |Resource group|the name of a new resource group **AZ801-L0502-RG**|
+   |Storage account name|enter a unique value|
+   |Region|the name of the Azure region into which you deployed the Recovery Services vault earlier in this lab|
+   |Performance|Standard|
+   |Redundancy| Locally-redundant storage (LRS)|
+
+1. On the **Data protection** blade of the **Create a storage account** page, ensure that **Enable soft delete for blobs**, **Enable soft delete for containers**, and **Enable soft delete for file shares** are not selected.
+
+1. On **Create a storage account** page, select **Review + create**, then select **Create**.
 
 #### Task 2: Prepare protection of a Hyper-V virtual machine
 
-1. On **SEA-SVR2**, in the Microsoft Edge window displaying the Azure portal, use the **Search resources, services, and docs** text box in the toolbar to search for and select **Recovery Services vaults**, and on the **Recovery Services vaults** page, select the **az801l05a-rsvault** entry.
-1. On the **az801l05a-rsvault** page, on the vertical menu on the left side, in the **Getting started** section, select **Site Recovery**.
-1. On the **az801l05a-rsvault \| Site Recovery** page, in the **Hyper-V machines to Azure** section, select **1. Prepare infrastructure**. 
-1. On the **Deployment planning** tab of the **Prepare infrastructure** page, in the **Deployment planning completed?** drop-down list, select **Yes, I have done it** and select **Next**.
-1. On the **Source settings** tab of the **Prepare infrastructure** page, next to the **Are you Using System Center VMM to manage Hyper-V hosts** label, select the **No** option.
-1. On the **Source settings** tab of the **Prepare infrastructure** page, select the **Add Hyper-V site** link. 
-1. On the **Create Hyper-V Site** page, in the **Name** text box, enter **az801l05-site** and select **OK**.
-1. In Windows Start, search and open the Group Policy Management Editor and edit the following policy. Select Default Domain Policy, and then right-click and Edit.
+1. On **SEA-SVR2**, in Windows Start, search and open the Group Policy Management and edit the following policy. Select Default Domain Policy, and then right-click and Edit.
 1. Select Computer Configuration/Policies/Administrative Templates/Windows Components/Windows Update. Select the policy Configure Automatic Updates.
 1. In the Computer Updates page, select **Enabled**, and then click **OK**.
 1. Open Windows PowerShell, run the following commands to update Group Policy and update Windows Update services: 
@@ -135,8 +130,14 @@ lab:
    Get-Service wuauserv | Set-Service -StartupType Manual
    Get-Service wuauserv | Start-Service
    ```
-
-1. Switch back to the Microsoft Edge window displaying the Azure portal, on the **Source settings** tab of the **Prepare infrastructure** page, select the **Add Hyper-V server** link. 
+1. On **SEA-SVR2**, in the Microsoft Edge window displaying the Azure portal, use the **Search resources, services, and docs** text box in the toolbar to search for and select **Recovery Services vaults**, and on the **Recovery Services vaults** page, select the **az801l05a-rsvault** entry.
+1. On the **az801l05a-rsvault** page, on the vertical menu on the left side, in the **Getting started** section, select **Site Recovery**.
+1. On the **az801l05a-rsvault \| Site Recovery** page, in the **Hyper-V machines to Azure** section, select **1. Prepare infrastructure**. 
+1. On the **Deployment planning** tab of the **Prepare infrastructure** page, in the **Deployment planning completed?** drop-down list, select **Yes, I have done it** and select **Next**.
+1. On the **Source settings** tab of the **Prepare infrastructure** page, next to the **Are you Using System Center VMM to manage Hyper-V hosts** label, select the **No** option.
+1. On the **Source settings** tab of the **Prepare infrastructure** page, select the **Add Hyper-V site** link. 
+1. On the **Create Hyper-V Site** page, in the **Name** text box, enter **az801l05-site** and select **OK**.
+1. On the **Source settings** tab of the **Prepare infrastructure** page, select the **Add Hyper-V server** link. 
 1. on the **Add Server** page, select the **Download** link in step 3 of the procedure for adding on-premises Hyper-V hosts in order to download the installer for Microsoft Azure Site Recovery Provider.
 
    > **Note:** If you receive the Microsoft Edge notification that **AzureSiteRecoveryProvider.exe can't be downloaded securely**, move the cursor over the right side of the message to reveal the ellipsis symbol (**...**), select it, in the drop-down menu, select **Copy download link**, open another tab in the same Microsoft Edge window, paste the link you copied, and then press Enter.
@@ -154,11 +155,17 @@ lab:
 
    > **Note:** In case the registration fails, select **Start**. On the **Start** menu, select the **Azure Site Recovery Services Provider** folder. In the folder, select **Azure Site Recovery Configurator** and re-run the registration procedure.
 
-1. Switch back to the Microsoft Edge window displaying the Azure portal, close the **Add Server** page, and refresh the page. When prompted, select **Reload**. 
-1. Back on the **az801l05a-rsvault | Site Recovery** page, in the **Hyper-V machines to Azure** section, select **1. Prepare infrastructure**. 
+1. Switch back to the Microsoft Edge window displaying the Azure portal, close the **Add Server** page, and refresh the page. When prompted, select **Reload**.
+
+    > **Note:** If you encounter a **Welcome to Microsoft Azure** pop-up and offered a tour, select **Maybe later**.
+
+    > **Note:** You'll need to complete the first two steps of preparing the infrastructure again, then Hyper-V server list will load.
+
 1. On the **Deployment planning** tab of the **Prepare infrastructure** page, in the **Deployment planning completed?** drop-down list, select **Yes, I have done it** and select **Next**.
 1. On the **Source settings** tab of the **Prepare infrastructure** page, next to the **Are you Using System Center VMM to manage Hyper-V hosts** label, select the **No** option.
-Verify that the **Hyper-V site** and **Hyper-V servers** settings are set correctly and select **Next**. 
+1. On the **Source settings** tab of the **Prepare infrastructure** page, select the **Add Hyper-V site** link. 
+1. On the **Create Hyper-V Site** page, in the **Name** text box, enter **az801l05-site** and select **OK**.
+1. **SEA-SVR2.contoso.com** should be listed as a Hyper-V server. Verify that the **Hyper-V site** and **Hyper-V servers** settings are set correctly and select **Next**. 
 1. On the **Target settings** tab of the **Prepare infrastructure** page, accept the default settings and select **Next**.
 1. On the **Replication policy** tab of the **Prepare infrastructure** page, select **Create new policy and associate**. 
 1. On the **Create and associate policy** page, specify the following settings (leave others with their default values) and select **OK**:
@@ -182,11 +189,11 @@ Verify that the **Hyper-V site** and **Hyper-V servers** settings are set correc
    |Subscription|the name of the Azure subscription you are using in this lab|
    |Post-failover resource group|**AZ801-L0502-RG**|
    |Post-failover deployment model|**Resource Manager**|
-   |Azure network|Configure now for selected machines|
+   |Replica Storage type|**Storage account**|
+   |Storage account|Select the storage account you created earlier|
+   |Network|Configure now for selected machines|
    |Virtual network|**az801l05-dr-vnet**|
    |Subnet|**subnet0 (10.5.0.0/24)**|
-
-   > **Note:** Azure Site Recovery will automatically use managed disks for replicating the virtual machine. A cache storage account will be created automatically if needed.
 
 1. On the **Virtual machine selection** tab of the **Enable replication** page, select the **SEA-CORE1** checkbox and select **Next**.
 1. On the **Replication settings** tab of the **Enable replication** page, in the **Defaults** row and **OS type** column, select **Windows** from the drop-down list and select **Next**.
@@ -203,7 +210,7 @@ Verify that the **Hyper-V site** and **Hyper-V servers** settings are set correc
 1. On the **az801l05a-rsvault \| Replicated items** page, select the **SEA-CORE1** entry.
 1. On the **SEA-CORE1** replicated items page, review the **Health and status**, **Failover readiness**, **Latest recovery points**, and **Infrastructure view** sections. Note the **Planned Failover**, **Failover** and **Test Failover** toolbar icons.
 
-   > **Note:** Wait until the status changes to **Protected**. The time required for this to take place depends on the available bandwidth of the connection between the lab environment and the Azure region hosting the Recovery Services vault. You will need to refresh the browser page for the status to be updated. 
+   > **Note:** Wait until the status changes to **Protected**. The time required for this to take place depends on the available bandwidth of the connection between the lab environment and the Azure region hosting the Recovery Services vault. **You will need to refresh the browser page for the status to be updated**. 
 
 1. On the **SEA-CORE1** replicated items page, select **Latest recovery points** and review **Latest crash-consistent** and **Latest app-consistent** recovery points. 
 
@@ -221,7 +228,7 @@ Verify that the **Hyper-V site** and **Hyper-V servers** settings are set correc
 
    > **Note:** The time required for the test failover to complete depends on the available bandwidth of the connection between the lab environment and the Azure region hosting the Recovery Services vault. You will need to refresh the browser page for the status to be updated. 
 
-   > **Note:** While waiting for the test failover to complete, proceed to Exercise 3, and after you finish it, step through the remaining portion of this exercise.
+   > **Note:** While waiting for the test failover to complete, you may proceed to Exercise 3, and after you finish it, step through the remaining portion of this exercise. Proceeding to Exercise 3 will cause a **Critical** error for **Replication Health** status. This is expected due to uninstalling the agent used to replicate the server. 
 
 1. In the Azure portal, use the **Search resources, services, and docs** text box in the toolbar to search for and select **Virtual machines** and, on the **Virtual machines** page, note the entry representing the newly provisioned virtual machine.
 
@@ -271,7 +278,7 @@ Verify that the **Hyper-V site** and **Hyper-V servers** settings are set correc
 1. On the **Installation** page of the **Microsoft Azure Recovery Services Agent Setup Wizard**, select **Install**.
 1. After the installation completes, on the **Installation** page of the **Microsoft Azure Recovery Services Agent Setup Wizard**, select **Proceed to Registration**. This will launch the **Register Server Wizard**.
 1. Switch to the Microsoft Edge window displaying the Azure portal, on the **Prepare infrastructure** page, select the **Already downloaded or using the latest Recovery Server Agent** checkbox , and select **Download**.
-1. When prompted, whether to open or save the vault credentials file, select **Save**. This will save the vault credentials file to the local Downloads folder.
+1. If prompted to open or save the vault credentials file, select **Save**. This will save the vault credentials file to the local Downloads folder.
 1. Switch back to the **Register Server Wizard**, and on the **Vault Identification** page, select **Browse**.
 1. In the **Select Vault Credentials** dialog box, browse to the **Downloads** folder, select the vault credentials file you downloaded, and then select **Open**. Then select **Next** to open the **Encryption Setting** page.
 1. On the **Encryption Setting** page of the **Register Server Wizard**, uncheck the **Save passphrase securely to Azyre Key Vault** and select **yes**, confirming you want to proceed without saving the passphrase to Azure Key Vault.
@@ -316,7 +323,7 @@ Verify that the **Hyper-V site** and **Hyper-V servers** settings are set correc
 #### Task 4: Perform file recovery by using Azure Recovery Services agent
 
 1. On **SEA-SVR2**, open File Explorer, browse to the **C:\\Windows\\System32\\drivers\\etc\\** folder and delete the **hosts** file.
-1. Switch to the Microsoft Azure Backup window and select **Recover data**. This will start the **Recover Data Wizard**.
+1. Switch to the Microsoft Azure Backup window and select **Recover data** from the **Actions** menu. This will start the **Recover Data Wizard**.
 1. On the **Getting Started** page of the **Recover Data Wizard**, ensue that **This server (sea-svr2.contoso.com)** option is selected and select **Next**.
 1. On the **Select Recovery Location** page, ensure that **Primary Region** option is selected, and select **Next**.
 1. On the **Select Recovery Mode** page, ensure that **Individual files and folders** option is selected, and select **Next**.
