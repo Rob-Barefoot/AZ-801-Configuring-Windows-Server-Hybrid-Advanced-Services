@@ -6,6 +6,8 @@ lab:
 
 # Lab: Migrating Hyper-V VMs to Azure by using Azure Migrate
 
+This exercise should take approximately **120** minutes to complete. <!-- update with estimated duration -->
+
 ## Lab scenario
 
 Despite its ambitions to modernize its workloads as part of the migration to Azure, the Adatum Enterprise Architecture team realizes that, due to aggressive timelines, in many cases, it will be necessary to follow the lift-and-shift approach. To simplify this task, the team starts exploring the capabilities of Azure Migrate. Azure Migrate serves as a centralized hub to assess and migrate to Azure on-premises servers, infrastructure, applications, and data.
