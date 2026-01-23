@@ -7,6 +7,8 @@ lab:
 
 # Lab answer key: Implementing operational monitoring in hybrid scenarios
 
+This exercise should take approximately **60** minutes to complete. <!-- update with estimated duration -->
+
 ## Exercise 1: Preparing a monitoring environment
 
 #### Task 1: Deploy an Azure virtual machine
