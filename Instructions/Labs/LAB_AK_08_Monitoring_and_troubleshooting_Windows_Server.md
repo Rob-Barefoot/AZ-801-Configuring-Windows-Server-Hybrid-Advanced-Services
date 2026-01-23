@@ -7,6 +7,8 @@ lab:
 
 # Lab answer key: Monitoring and troubleshooting Windows Server
 
+This exercise should take approximately **40** minutes to complete. <!-- update with estimated duration -->
+
 ### Exercise 1: Establishing a performance baseline
 
 > **Note**: After starting the Data Collector Set, there might be a delay of 10 minutes for the results to appear.
