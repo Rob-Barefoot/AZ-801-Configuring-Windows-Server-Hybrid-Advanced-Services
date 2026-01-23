@@ -5,6 +5,8 @@ lab:
     module: 'Module 3: High availability in Windows Server'
 ---
 
+This exercise should take approximately **60** minutes to complete. <!-- update with estimated duration -->
+
 # Lab answer key: Implementing failover clustering
 
 ## Exercise 1: Configuring iSCSI storage
