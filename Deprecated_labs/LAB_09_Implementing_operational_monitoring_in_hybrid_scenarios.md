@@ -6,6 +6,8 @@ lab:
 
 # Lab: Implementing operational monitoring in hybrid scenarios
 
+This exercise should take approximately **60** minutes to complete. <!-- update with estimated duration -->
+
 ## Lab scenario
 
 You need to evaluate Microsoft Azure functionality that would provide insight into the performance and configuration of Azure resources, focusing in particular on Azure virtual machines (VMs). To accomplish this, you intend to examine the capabilities of Azure Monitor, including Log Analytics.
