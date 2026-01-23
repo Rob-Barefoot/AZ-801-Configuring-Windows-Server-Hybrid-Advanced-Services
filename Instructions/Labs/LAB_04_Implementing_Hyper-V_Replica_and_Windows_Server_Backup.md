@@ -6,6 +6,8 @@ lab:
 
 # Lab: Implementing Hyper-V Replica and Windows Server Backup
 
+This exercise should take approximately **45** minutes to complete. <!-- update with estimated duration -->
+
 ## Scenario
 
 You're working as an administrator at Contoso, Ltd. Contoso wants to assess and configure new disaster recovery and backup features and technologies. As the system administrator, you have been tasked with performing that assessment and implementation. You decided to evaluate **Hyper-V Replica** and Windows Server Backup.
