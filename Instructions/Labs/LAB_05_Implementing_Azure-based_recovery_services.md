@@ -6,6 +6,8 @@ lab:
 
 # Lab: Implementing Azure-based recovery services
 
+This exercise should take approximately **60** minutes to complete. <!-- update with estimated duration -->
+
 ## Scenario 
 To address concerns regarding the outdated operational model, the limited use of automation, and reliance on tape backups for restores and disaster recovery, you decide to use Microsoft Azure-based recovery services. As the first step, you'll implement Azure Site Recovery and Azure Backup.
 
