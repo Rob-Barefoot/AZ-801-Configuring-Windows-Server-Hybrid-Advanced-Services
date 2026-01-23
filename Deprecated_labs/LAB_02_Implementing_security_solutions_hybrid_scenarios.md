@@ -6,6 +6,8 @@ lab:
 
 # Lab: Implementing Security Solutions in Hybrid Scenarios
 
+This exercise should take approximately **75** minutes to complete. <!-- update with estimated duration -->
+
 ## Scenario
 
 To identify Microsoft Azure security-related integration features with which you can further enhance your on-premises and cloud security environment, you have decided to onboard Windows servers in your proof-of-concept environment into Microsoft Defender for Cloud. You also want to integrate on-premises servers and Azure VMs running Windows Server with Azure Automation-based solutions, including Inventory, Change tracking, and Update management.
